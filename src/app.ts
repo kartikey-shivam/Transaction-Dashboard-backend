@@ -11,7 +11,7 @@ import { verifyToken } from "./utils/jwtHelper";
 dotenv.config();
 
 const app = express();
-const origin = ['http://localhost:3000', "https://transaction-dashboard-frontend-p74811n9s.vercel.app"]
+const origin = ['http://localhost:3000', "https://transaction-dashboard-frontend-p74811n9s.vercel.app", "https://transaction-dashboard-frontend-beta.vercel.app"]
 // Middleware
 app.use(cors({ origin}));
 app.use(express.json());
