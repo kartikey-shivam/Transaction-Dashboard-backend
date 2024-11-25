@@ -11,9 +11,9 @@ import { verifyToken } from "./utils/jwtHelper";
 dotenv.config();
 
 const app = express();
-
+const origin = ['http://localhost:3000', "https://transaction-dashboard-frontend-b7gqobbql.vercel.app"]
 // Middleware
-app.use(cors());
+app.use(cors({ origin}));
 app.use(express.json());
 
 // Connect to MongoDB
