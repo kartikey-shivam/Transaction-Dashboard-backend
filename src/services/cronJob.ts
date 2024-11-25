@@ -26,7 +26,7 @@ export const startCronJob = (req: Request, res: Response) => {
 
 export const stopCronJob = (req: Request, res: Response) => {
   if (!isRunning) {
-    return res.status(400).json({ success:false, message: 'CRON job is not running.' });
+    return res.status(400).json({ success:false});
   }
 
   task?.stop();

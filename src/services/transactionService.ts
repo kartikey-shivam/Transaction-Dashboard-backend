@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import Transaction from '../models/transaction';
 import Logger from '../utils/logger';
-
+import * as XLSX from 'xlsx';
+// import { parse } from 'json2csv';
 // Create a new transaction
 export const createTransaction = async (req: Request, res: Response) => {
   try {
-    // Destructure the required fields from the request body
     const {
       type,
-      transactionState = "CREATED", // Default state is "CREATED"
+      transactionState = "CREATED", 
       description,
       originUserId,
       destinationUserId,
@@ -134,8 +134,8 @@ export const filterTransactions = async (req: Request, res: Response) => {
       tags,
       originDeviceData,
       destinationDeviceData,
-      page,
-      limit,
+      page=1,
+      limit=10,
     } = req.query;
 
     // Build the filter object
@@ -256,6 +256,37 @@ export const filterTransactions = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error filtering transactions:", error);
     res.status(500).json({ message: "An error occurred while filtering transactions." });
+  }
+};
+
+export const downloadCSV = (req: Request, res: Response): void => {
+  // Sample data - Replace with your dynamic data source
+  try {
+  console.log("264",req.body)
+  const {data }= req.body;
+  console.log(data,"265")
+    // Log data for debugging
+    // console.log('Data for CSV:', data);
+
+    // Check if data is an array of objects
+    if (!Array.isArray(data) || !data.every((item) => typeof item === 'object')) {
+      throw new Error('Invalid data format: Expected an array of objects');
+    }
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+
+    const csvBuffer = XLSX.write(workbook, { bookType: 'csv', type: 'buffer' });
+
+    res.setHeader('Content-Disposition', 'attachment; filename=data.csv');
+    res.setHeader('Content-Type', 'text/csv');
+
+    res.send(csvBuffer);
+  } catch (error) {
+    console.error('Error generating CSV:', error);
+    res.status(500).send('Failed to generate CSV');
   }
 };
 

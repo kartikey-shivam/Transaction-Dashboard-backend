@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  backend:
+    image: shivam/flagright-backend:latest # Docker Image of Backend App
+    container_name: backend
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env
